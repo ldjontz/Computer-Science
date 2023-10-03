@@ -61,23 +61,29 @@ constexpr void heapsort(RandomIt first, RandomIt last){
     }
 }
 
-/*template <class RandomIt>
+template <class RandomIt>
 constexpr int partition(RandomIt first, RandomIt last){
-    auto pivot = *last;
+    auto pivot = *(last-1);
+    int i = first - 1;
+    for(int j = i + 1; j < last - first){
+        if(first[j] <= pivot){
+            i++;
+            iter_swap(first + j, first + i);
+        }
+    }
+    iter_swap(first + i + 1, last);
+    return i + 1;
 }
 
 template <class RandomIt>
 constexpr void quicksort(RandomIt first, RandomIt last){
-    RandomIt it = first;
     if(0 < last - first){
         int pivot = partition(first, last);
-        advance(it, pivot - 1);
-        quicksort(first, it);
-        advance(it, 2);
-        quicksort(it, last);
+        quicksort(first, first + pivot - 1);
+        quicksort(first + pivot + 1, last);
     }
 }
-*/
+
 template< class RandomIt >
 void print(RandomIt start, RandomIt end) {
 	while (start != end) {
