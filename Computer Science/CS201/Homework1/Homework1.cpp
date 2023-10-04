@@ -53,38 +53,40 @@ template <class RandomIt>
 constexpr void heapsort(RandomIt first, RandomIt last){
     int n = last - first - 1;
     int size = last - first;
-    BuildMaxHeap(first, size);
+    BuildMaxHeap(first, size); //Move largest element to the front
     for (int i = n; i > 0; i--){
-        iter_swap(first, first + i);
-        n--;
-        MaxHeapify(first, 0, n);
+        iter_swap(first, first + i); // Move largest element to the back
+        n--; //Decrease the size of the array that needs to be sorted
+        MaxHeapify(first, 0, n); //Move the new largest element to the front
     }
 }
 
 template <class RandomIt>
-constexpr int partition(RandomIt first, RandomIt last){
-    auto pivot = *(last-1);
-    int i = first - 1;
-    for(int j = i + 1; j < last - first){
-        if(first[j] <= pivot){
-            i++;
-            iter_swap(first + j, first + i);
+constexpr RandomIt partition(RandomIt first, RandomIt last){
+    RandomIt pivot = first + (last - first) / 2; //Obtain middle pivot
+    RandomIt i = first - 1;
+    iter_swap(pivot, last - 1); //Move pivot the back
+    for(RandomIt it = first; it < last - 1; it++){
+        if(*it <= *(last - 1)){ //Execute if element is smaller than pivot value
+            i++; //Increment index to place element
+            iter_swap(i, it); //Place element at that index
         }
     }
-    iter_swap(first + i + 1, last);
-    return i + 1;
+    iter_swap(i + 1, last - 1); //Move pivot to correct position
+    return i + 1; //return pivot index
 }
 
 template <class RandomIt>
 constexpr void quicksort(RandomIt first, RandomIt last){
-    if(0 < last - first){
-        int pivot = partition(first, last);
-        quicksort(first, first + pivot - 1);
-        quicksort(first + pivot + 1, last);
+    if(first < last){
+        RandomIt pivot = partition(first, last); //Obtain pivot
+        quicksort(first, pivot); //Recursively sort
+        quicksort(pivot + 1, last); //Recursively sort
     }
 }
 
 template< class RandomIt >
+
 void print(RandomIt start, RandomIt end) {
 	while (start != end) {
 		std::cout << *start << " ";
@@ -95,31 +97,45 @@ void print(RandomIt start, RandomIt end) {
 
 
 int main(int argc, char *argv[]) {
-	int a0[] = {56, 23, 11, 64, 43};
-	std::array<int, 5> a1 = {5, 4, 3, 2, 1};
-	std::array<std::string, 5> a2 = {"lion", "dog", "cat", "fox", "pig"};
-	std::vector<double> v = {4.2, 3.1, 5.6, 2.8, 1.9};
+	std::chrono::duration<double> timetaken[3][3];
+	std::cout << "Problem Size\tTime Taken (seconds)" << std::endl;
+	std::cout << "\t\tCase 1\tCase 2\tCase 3" << std::endl;
+	for (int size = 10; size <= 100000000; size *= 10) {
+	
+		int *a = new int[size];
 
-	heapsort(a0, a0+5);
-	print(a0, a0+5);
+		// repeat each case for three times 
+		for (int i = 0; i < 3; i++) {
+			std::generate(a, a+size, std::rand);
 
-	heapsort(&a0[0], &a0[5]);
-	print(&a0[0], &a0[5]);
+			/* Case 1: sorting random values */
+			auto starttime = std::chrono::steady_clock::now();
+			std::sort(a, a+size);
+			auto endtime = std::chrono::steady_clock::now();
+			timetaken[i][0] = endtime - starttime;
 
-	heapsort(a1.begin(), a1.end());
-	print(a1.begin(), a1.end());
+			/* Case 2: sorting data that is already sorted */
+			starttime = std::chrono::steady_clock::now();
+			std::sort(a, a+size);
+			endtime = std::chrono::steady_clock::now();
+			timetaken[i][1] = endtime - starttime;
 
-	heapsort(a2.begin(), a2.end());
-	print(a2.begin(), a2.end());
+			/* Case 3: sorting data that is in reverse sorted order */
+			std::reverse(a, a+size);
+			starttime = std::chrono::steady_clock::now();
+			std::sort(a, a+size);
+			endtime = std::chrono::steady_clock::now();
+			timetaken[i][2] = endtime - starttime;
+		}
 
-	std::reverse(a2.begin(), a2.end());
-	print(a2.begin(), a2.end());
+		// print the average time of three runs
+		std::cout << size << "\t\t";
+		std::cout << (timetaken[0][0].count() + timetaken[1][0].count() + timetaken[2][0].count())/3.0 << "\t";
+		std::cout << (timetaken[0][1].count() + timetaken[1][1].count() + timetaken[2][1].count())/3.0 << "\t";
+		std::cout << (timetaken[0][2].count() + timetaken[1][2].count() + timetaken[2][2].count())/3.0 << std::endl;
 
-	heapsort(a2.begin(), a2.end());
-	print(a2.begin(), a2.end());
-
-	heapsort(v.begin(), v.end());
-	print(v.begin(), v.end());
+		delete[] a;
+	}
 
 	return 0;
 }
