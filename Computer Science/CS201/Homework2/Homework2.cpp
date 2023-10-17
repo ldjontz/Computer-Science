@@ -28,8 +28,10 @@ int main(int argc, char** argv) {
       }
    }
 
-   for(const auto & str : tokens)
-      cout << str << endl;
-
+   it = tokens.begin();
+   while(it != tokens.end()){
+        cout << it->first << ": " << it->second << endl;
+        it++;
+   }
    return 0;
 }
