@@ -3,10 +3,32 @@
 #include <regex>
 #include <fstream>
 #include <map>
+#include <chrono>
+
 
 using namespace std;
 
+bool cmp(pair<string, int>& a, pair<string, int>& b){
+    if(a.second == b.second){
+        return a.first < b.first;
+    }
+    return a.second < b.second;
+}
+
+void mapsort(map<string, int> &map){
+    vector<pair<string, int>> values;
+    for(auto& it : map){
+        values.push_back(it);
+    }
+    sort(values.begin(), values.end(), cmp);
+    for(auto& it : values){
+        cout << it.first << ": " << it.second << endl;
+    }
+}
+
 int main(int argc, char** argv) {
+   chrono::time_point<chrono::system_clock> start, end;
+   start = chrono::system_clock::now(); //Start timing the entire program
    string text;
    map<string, int> tokens;
    const regex delim("\\s+");
@@ -27,11 +49,8 @@ int main(int argc, char** argv) {
          }
       }
    }
-
-   it = tokens.begin();
-   while(it != tokens.end()){
-        cout << it->first << ": " << it->second << endl;
-        it++;
-   }
-   return 0;
+   mapsort(tokens);
+   end = chrono::system_clock::now(); //End time for program
+   chrono::duration<double> elapsed_seconds = end - start;
+   cout << "Time taken: " << elapsed_seconds.count() << endl;
 }
