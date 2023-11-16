@@ -6,6 +6,8 @@
 #include <sstream>
 #include <list>
 #include <limits>
+#include <queue>
+#define INFINITY std::numeric_limits<int>::infinity();
 
 class Vertex {
 public:
@@ -62,7 +64,24 @@ public:
 	}
 
 	void bfs(int s) {
-		// your implementation goes here
+		vertices[s].visited = true;
+		vertices[s].distance = 0;
+		vertices[s].previous = -1;
+		std::queue<int> Q;
+		Q.push(s);
+		while(!Q.empty()){
+			int u = Q.front();
+			Q.pop();
+			for(int i : vertices[u].adj){
+				if(vertices[i].visited == false){
+					vertices[i].visited = true;
+					vertices[i].distance = vertices[u].distance + 1;
+					vertices[i].previous = u;
+					Q.push(i);
+				}
+			}
+		}
+
 	}
 
 	void dfs() {
