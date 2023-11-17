@@ -1,8 +1,11 @@
-// Driver program to test the Graph class
-// To compile: g++ -Wall -std=c++20 GraphDemo.cpp
-// To run: ./a.out input1.txt
-//         ./a.out input2.txt
-
+/*
+    Name: Luca Jontz
+    Email: ldjontz@crimson.ua.edu
+    Course Section: Fall 2023 CS 201
+    Homework 4
+    Instructions to Compile: g++ -Wall -std=c++20 GraphDemo.cpp
+    Instructions to execute: ./a.exe input1.txt
+*/
 #include <iostream>
 #include <fstream>
 #include <string>

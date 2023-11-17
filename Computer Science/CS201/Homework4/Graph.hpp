@@ -1,3 +1,11 @@
+/*
+    Name: Luca Jontz
+    Email: ldjontz@crimson.ua.edu
+    Course Section: Fall 2023 CS 201
+    Homework 4
+    Instructions to Compile: g++ -Wall -std=c++20 GraphDemo.cpp
+    Instructions to execute: ./a.exe input1.txt
+*/
 #ifndef _GRAPH_HPP_
 #define _GRAPH_HPP_
 
@@ -64,6 +72,11 @@ public:
 	}
 
 	void bfs(int s) {
+		for(int i = 0; i < _V; i++){
+			vertices[i].visited = false;
+			vertices[i].distance = INFINITY;
+			vertices[i].previous = -1;
+		}
 		vertices[s].visited = true;
 		vertices[s].distance = 0;
 		vertices[s].previous = -1;
@@ -85,11 +98,30 @@ public:
 	}
 
 	void dfs() {
-		// your implementation goes here
+		for(int i = 0; i < _V; i++){
+			vertices[i].visited = false;
+			vertices[i].previous = -1;
+		}
+		for(int i = 0; i < _V; i++){
+			if(!vertices[i].visited){
+				dfs_visit(i);
+			}
+		}
 	}
 
 	void dfs_visit(int u) {
-		// your implementation goes here
+		int time = 1;
+		vertices[u].distance = time;
+		vertices[u].visited = true;
+		for(int v : vertices[u].adj){
+			if(!vertices[v].visited){
+				vertices[v].previous = u;
+				dfs_visit(v);
+			}
+		}
+		time++;
+		vertices[u].finish = time;
+		std::cout << u << " ";
 	}
 
 	void print_path(int s, int v) {
